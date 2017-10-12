@@ -2,9 +2,10 @@ FROM php:7.1-apache
 
 RUN apt-get update \
     && apt-get install -y \
-        openssl-dev \
-        icu-dev \
+        libssl-dev \
+        libicu-dev \
         libmcrypt-dev \
+        libapache2-mod-rpaf \
         cron \
         sudo \
         acl \
@@ -16,11 +17,9 @@ RUN apt-get update \
         zip \
         opcache \
     && pecl install xdebug \
-    && a2enmod rpaf \
     && rm /tmp/* -rf \
     && rm -r /var/lib/apt/lists/*
 
-COPY srv-web.conf /etc/apache2/conf-available/docker-srv-web.conf
 COPY xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 COPY sync-vendor.php /usr/local/bin/sync-vendor
 
@@ -36,6 +35,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
     && echo "{ }" > /composer/home/config.json \
     && composer config --global vendor-dir /composer/vendor \
     && chmod 744 /usr/local/bin/sync-vendor \
-    && chmod 644 /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini /etc/apache2/conf-available/docker-srv-web.conf
+    && chmod 644 /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 VOLUME [ "/composer/home/cache" ]
