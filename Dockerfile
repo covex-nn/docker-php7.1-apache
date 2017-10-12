@@ -1,7 +1,13 @@
 FROM php:7.1-apache
 
 RUN apt-get update \
-    && apt-get install -y cron sudo acl \
+    && apt-get install -y \
+        openssl-dev \
+        icu-dev \
+        libmcrypt-dev \
+        cron \
+        sudo \
+        acl \
     && docker-php-ext-install \
         intl \
         mbstring \
